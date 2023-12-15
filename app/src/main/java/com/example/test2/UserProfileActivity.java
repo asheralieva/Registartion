@@ -1,8 +1,10 @@
 package com.example.test2;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,11 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class UserProfileActivity extends AppCompatActivity {
+    ArrayList<ReadWriteUserDetails> users = new ArrayList<ReadWriteUserDetails>();
+
     private TextView textViewWelcome, textViewFullName, textViewEmail, textViewDoB, textViewGender, textViewMobile;
     private ProgressBar progressBar;
     private String fullName, email, dob, gender, mobile;
     private ImageView imageView;
     private FirebaseAuth authProfile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,64 +56,93 @@ public class UserProfileActivity extends AppCompatActivity {
             showUserProfile(firebaseUser);
         }
 
+
     }
 
     private void showUserProfile(FirebaseUser firebaseUser) {
         String userId = firebaseUser.getUid();
-        String email = firebaseUser.getEmail();
-
+//        String email = firebaseUser.getEmail();
+        Intent intent = getIntent();
+        String email = intent.getStringExtra("email");
+        Toast.makeText(this, email, Toast.LENGTH_SHORT).show();
 
         //Extracting User Reference from Database for "Registered Users"
-        DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered Users");
-        referenceProfile.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+//        DatabaseReference referenceProfile = FirebaseDatabase.getInstance().getReference("Registered users");
+//        referenceProfile.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                ReadWriteUserDetails readUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
+//                if(readUserDetails != null){
+//                    DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Registered users");
+//
+//                    Query query = usersRef.orderByChild("email").equalTo(email);
+//                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                                // Обработка каждой записи
+//                                ReadWriteUserDetails readWriteUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
+//                                users.add(readWriteUserDetails);
+//                                // user содержит данные пользователя, где поле fieldName равно desiredValue
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//                            // Обработка ошибок, если они возникли
+//                        }
+//                    });
+////                    fullName = firebaseUser.getDisplayName();
+////                    email = firebaseUser.getEmail();
+////                    dob = readUserDetails.dob;
+////                    mobile = readUserDetails.mobile;
+////                    gender = readUserDetails.gender;
+//
+//                    fullName = users.get(0).fullName;
+//
+//
+//                    textViewWelcome.setText("Welcome "+fullName+"!");
+////                    textViewFullName.setText(fullName);
+////                    textViewEmail.setText(email);
+////                    textViewDoB.setText(dob);
+////                    textViewGender.setText(gender);
+////                    textViewMobile.setText(mobile);
+//
+//                    Toast.makeText(UserProfileActivity.this, fullName, Toast.LENGTH_SHORT).show();
+//                }
+//                progressBar.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Registered users");
+
+        Query query = usersRef.orderByChild("email").equalTo(email);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ReadWriteUserDetails readUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
-                if(readUserDetails != null){
-                    ArrayList<ReadWriteUserDetails> users = new ArrayList<ReadWriteUserDetails>();
-                    DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Registered Users");
-
-                    Query query = usersRef.orderByChild("email").equalTo(email);
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                // Обработка каждой записи
-                                ReadWriteUserDetails readWriteUserDetails = snapshot.getValue(ReadWriteUserDetails.class);
-                                users.add(readWriteUserDetails);
-                                // user содержит данные пользователя, где поле fieldName равно desiredValue
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            // Обработка ошибок, если они возникли
-                        }
-                    });
-//                    fullName = firebaseUser.getDisplayName();
-//                    email = firebaseUser.getEmail();
-//                    dob = readUserDetails.dob;
-//                    mobile = readUserDetails.mobile;
-//                    gender = readUserDetails.gender;
-
-                    fullName = users.get(0).fullName;
-
-
-                    textViewWelcome.setText("Welcome "+fullName+"!");
-                    textViewFullName.setText(fullName);
-                    textViewEmail.setText(email);
-                    textViewDoB.setText(dob);
-                    textViewGender.setText(gender);
-                    textViewMobile.setText(mobile);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Обработка каждой записи
+                    ReadWriteUserDetails user = snapshot.getValue(ReadWriteUserDetails.class);
+                    users.add(user);
+                    // user содержит данные пользователя, где поле fieldName равно desiredValue
                 }
-                progressBar.setVisibility(View.GONE);
+
+
+                Toast.makeText(UserProfileActivity.this, users.get(0).fullName, Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onCancelled(DatabaseError databaseError) {
+                // Обработка ошибок, если они возникли
             }
         });
+
+
     }
 }

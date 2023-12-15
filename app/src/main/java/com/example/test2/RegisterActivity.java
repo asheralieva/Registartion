@@ -203,11 +203,11 @@ public class RegisterActivity extends AppCompatActivity {
                                 /*FLAG_ACTIVITY_CLEAR_TOP чаще всего используется вместе с FLAG_ACTIVITY_NEW_TASK.
                                 При совместном использовании эти флаги определяют местонахождение существующего действия в другой задаче
                                 и помещают его в положение, в котором оно может реагировать на намерение.*/
-                                Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
-                                //To Prevent User from returning back to Register Activity on pressing back Button after registration
-                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                finish(); // to close register activity
+//                                Intent intent = new Intent(RegisterActivity.this, UserProfileActivity.class);
+//                                //To Prevent User from returning back to Register Activity on pressing back Button after registration
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                startActivity(intent);
+//                                finish(); // to close register activity
 
                             }else{
                                 Toast.makeText(RegisterActivity.this, "User registered failed. Please try again",

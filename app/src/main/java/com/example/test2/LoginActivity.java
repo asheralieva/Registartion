@@ -85,7 +85,10 @@ public class LoginActivity extends AppCompatActivity {
 
                         //Open user Profile
                         //Start the UserProfileActivity
-                        startActivity(new Intent(LoginActivity.this, UserProfileActivity.class));
+//                        startActivity(new Intent(LoginActivity.this, UserProfileActivity.class));
+                        Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
+                        intent.putExtra("email", email);
+                        startActivity(intent);
                         finish();       //Close LoginActivity
                     }else{
                         firebaseUser.sendEmailVerification();
@@ -143,14 +146,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if(authProfile.getCurrentUser() != null ){
-            Toast.makeText(LoginActivity.this, "Already logged in!", Toast.LENGTH_SHORT).show();
-
-            //Start the UserProfileActivity
-            startActivity(new Intent(LoginActivity.this, UserProfileActivity.class));
-            finish();       //Close LoginActivity
-        }else{
+//        if(authProfile.getCurrentUser() != null ){
+//            Toast.makeText(LoginActivity.this, "Already logged in!", Toast.LENGTH_SHORT).show();
+//
+//            //Start the UserProfileActivity
+//            startActivity(new Intent(LoginActivity.this, UserProfileActivity.class));
+//            finish();       //Close LoginActivity
+//        }else{
             Toast.makeText(LoginActivity.this, "You can login!", Toast.LENGTH_SHORT).show();
-        }
+//        }
     }
 }
